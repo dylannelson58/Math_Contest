@@ -9,16 +9,17 @@ Option Strict On
 
 Public Class MathContestForm
 
+    'sets global variables accross all functions and subs
     Dim mathValidation As Integer
     Dim goodJob As Integer
     Dim totalAttempts As Integer
-    Dim summaryValue As Double
     Dim firstNumber As Integer
     Dim secondNumber As Integer
 
     Private Sub MathContestForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        firstnumber = CInt(RandomNumberOne(100))
+        'upon loading the form random numbers are generated in the first and second number text boxes so the student can immediately start answering problems
+        firstNumber = CInt(RandomNumberOne(100))
         secondNumber = CInt(RandomNumberTwo(100))
 
         FirstNumberTextBox.Text = CStr(firstnumber)
@@ -28,60 +29,58 @@ Public Class MathContestForm
 
 
     Private Sub SubmitButton_Click(sender As Object, e As EventArgs) Handles SubmitButton.Click
+
+        'calls forth the functions used when submitting check each individual function for notes on specifics
         AgeNameValidation()
         MathChecker()
-
-        Try
-            If CInt(StudentAnswerTextBox.Text) = CInt(mathValidation) Then
-                MsgBox($"Congratulations, the correct answer is {mathValidation}!")
-                goodJob += 1
-            End If
-
-            If CInt(StudentAnswerTextBox.Text) <> CInt(mathValidation) Then
-                MsgBox("That is not the correct answer" & vbNewLine &
-                       $"The correct answer is {mathValidation}")
-            End If
-        Catch ex As Exception
-            Exit Sub
-        End Try
-
-        totalAttempts += 1
-
-        FirstNumberTextBox.Text = CStr(RandomNumberOne(100))
-        SecondNumberTextBox.Text = CStr(RandomNumberOne(100))
-
-        'FirstNumberTextBox.Text = CStr(firstNumber)
-        'SecondNumberTextBox.Text = CStr(secondNumber)
+        CorrectOrNot()
 
     End Sub
 
     Private Sub ClearButton_Click(sender As Object, e As EventArgs) Handles ClearButton.Click
+
+        'resets all relevent variables 
         NameTextBox.Text = ""
         StudentAnswerTextBox.Text = ""
         AgeTextBox.Text = ""
         GradeTextBox.Text = ""
+        mathValidation = 0
+        totalAttempts = 0
+        goodJob = 0
+
     End Sub
 
     Private Sub SummaryButton_Click(sender As Object, e As EventArgs) Handles SummaryButton.Click
+
+        'if the student has not answered at all tells them to do at least one problem
+        If totalAttempts = 0 Then
+            MsgBox("You must try at least one time!")
+            Exit Sub
+        End If
+
+        'tallies up the correct answers and total attempts
         Try
-            summaryValue = (goodJob \ totalAttempts) * 100
-            MsgBox($"You got ({summaryValue})%, with {totalAttempts} attempts!")
+            MsgBox($"{NameTextBox.Text} got {goodJob} right, with {totalAttempts} attempts!")
         Catch ex As Exception
             Exit Sub
         End Try
+
+
     End Sub
 
     Private Sub ExitButton_Click(sender As Object, e As EventArgs) Handles ExitButton.Click
+        'closes the program when exit button is clicked
         Me.Close()
     End Sub
 
 
     Private Function AgeNameValidation() As Boolean
-        'Dim checkForAge As Boolean
-        'checkForAge = True
+
         Dim problemMessage As String
         Dim age711 As Integer
         Dim grade14 As Integer
+
+        'catches the user if they do not put in a value for age
         Try
             age711 = CInt(AgeTextBox.Text)
         Catch ex As Exception
@@ -89,6 +88,7 @@ Public Class MathContestForm
             Exit Function
         End Try
 
+        'catches the user if they do not put in a value for grade
         Try
             grade14 = CInt(GradeTextBox.Text)
         Catch ex As Exception
@@ -96,35 +96,36 @@ Public Class MathContestForm
             Exit Function
         End Try
 
+        'sets the age range to 7-11
         If age711 > CInt(11) Then
-            problemMessage &= "Student not eligible to compete" & vbNewLine
-            MsgBox("Student not eligible to compete")
+            problemMessage &= "Student not eligible to compete, too old." & vbNewLine
+        ElseIf age711 < CInt(7) Then
+            problemMessage &= "Student not eligible to compete, too young." & vbNewLine
         End If
 
-        If age711 < CInt(7) Then
-            problemMessage &= "Student not eligible to compete" & vbNewLine
-            MsgBox("Student not eligible to compete")
+        'sets the grade range to 1-4
+        If grade14 < CInt(1) Then
+            problemMessage &= "Student not eligible to compete, too low of grade." & vbNewLine
+        ElseIf grade14 > CInt(4) Then
+            problemMessage &= "Student not eligible to compete, too high of grade." & vbNewLine
         End If
 
-
-        If grade14 > CInt(1) Then
-            problemMessage &= "Student not eligible to compete" & vbNewLine
-            MsgBox("Student not eligible to compete")
-        End If
-
-        If grade14 < CInt(4) Then
-            problemMessage &= "Student not eligible to compete" & vbNewLine
-            MsgBox("Student not eligible to compete")
-        End If
-
+        'when name field is left blank tells the student to enter their name
         If NameTextBox.Text = "" Then
             problemMessage &= "Please enter your name" & vbNewLine
-            MsgBox("Please enter your name")
         End If
+
+        'if there are no issues then a msg box does not appear, while any problems are concatenated into a single msg box
+        If problemMessage = "" Then
+        ElseIf problemMessage <> "" Then
+            MsgBox(problemMessage)
+        End If
+
 
         Return True
     End Function
 
+    'both of these functions assign a random number down to the millisecond of the clock
     Private Function RandomNumberOne(maxNumber As Integer) As Integer
         Randomize(DateTime.Now.Millisecond)
         Return CInt(Math.Floor(Rnd() * (maxNumber)))
@@ -137,24 +138,55 @@ Public Class MathContestForm
 
     Public Function MathChecker() As Integer
 
-        'FirstNumberTextBox.Text = CStr(firstNumber)
-        'SecondNumberTextBox.Text = CStr(secondNumber)
+        're-assigns the variables for first and second number so they do not retain their old values
+        firstNumber = CInt(FirstNumberTextBox.Text)
+        secondNumber = CInt(SecondNumberTextBox.Text)
 
+        'based on which radio button is selected it will perform that desired calculation and apply it to mathValidation variable
         If AddRadioButton.Checked Then
             mathValidation = CInt(firstNumber) + CInt(secondNumber)
-        End If
-
-        If SubtractRadioButton.Checked Then
+        ElseIf SubtractRadioButton.Checked Then
             mathValidation = CInt(firstNumber) - CInt(secondNumber)
-        End If
-
-        If MultiplyRadioButton.Checked Then
+        ElseIf MultiplyRadioButton.Checked Then
             mathValidation = CInt(firstNumber) * CInt(secondNumber)
-        End If
-
-        If DivideRadioButton.Checked Then
+        ElseIf DivideRadioButton.Checked Then
             mathValidation = CInt(firstNumber) \ CInt(secondNumber)
         End If
+
+    End Function
+
+    Public Function CorrectOrNot() As Integer
+
+        'Try
+        '    mathValidation = CInt(StudentAnswerTextBox.Text)
+        'Catch ex As Exception
+        '    MsgBox("Numbers only for answers")
+        '    Exit Function
+        'End Try
+
+        Try
+            'when the student is correct they are informed and a value is assigned for giving a score at the end.
+            If CInt(StudentAnswerTextBox.Text) = CInt(mathValidation) Then
+                MsgBox($"Congratulations, the correct answer is {mathValidation}!")
+                goodJob += 1
+            End If
+
+            'when student answer is wrong the correct answer is shown and they are informed that they are wrong.
+            If CInt(StudentAnswerTextBox.Text) <> CInt(mathValidation) Then
+                MsgBox("That is not the correct answer;" & vbNewLine &
+                       $"The correct answer is {mathValidation}.")
+
+            End If
+        Catch ex As Exception
+            Exit Function
+        End Try
+
+        'counts the total amount of times the student has submitted for the score.
+        totalAttempts += 1
+
+        'Re-randomizes the numbers to be used in a seperate submit case.
+        FirstNumberTextBox.Text = CStr(RandomNumberOne(100))
+        SecondNumberTextBox.Text = CStr(RandomNumberOne(100))
 
     End Function
 

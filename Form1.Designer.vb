@@ -262,7 +262,7 @@ Partial Class MathContestForm
         '
         'SubmitButton
         '
-        Me.SubmitButton.Location = New System.Drawing.Point(13, 86)
+        Me.SubmitButton.Location = New System.Drawing.Point(13, 17)
         Me.SubmitButton.Margin = New System.Windows.Forms.Padding(2)
         Me.SubmitButton.Name = "SubmitButton"
         Me.SubmitButton.Size = New System.Drawing.Size(111, 63)
@@ -277,7 +277,7 @@ Partial Class MathContestForm
         Me.ClearButton.Margin = New System.Windows.Forms.Padding(2)
         Me.ClearButton.Name = "ClearButton"
         Me.ClearButton.Size = New System.Drawing.Size(111, 63)
-        Me.ClearButton.TabIndex = 1
+        Me.ClearButton.TabIndex = 2
         Me.ClearButton.Text = "&Clear"
         Me.ToolTip1.SetToolTip(Me.ClearButton, "Clears all fields to start over.")
         Me.ClearButton.UseVisualStyleBackColor = True
@@ -310,11 +310,12 @@ Partial Class MathContestForm
         '
         'SummaryButton
         '
-        Me.SummaryButton.Location = New System.Drawing.Point(13, 18)
+        Me.SummaryButton.Location = New System.Drawing.Point(13, 85)
         Me.SummaryButton.Name = "SummaryButton"
         Me.SummaryButton.Size = New System.Drawing.Size(111, 63)
-        Me.SummaryButton.TabIndex = 4
-        Me.SummaryButton.Text = "Summary"
+        Me.SummaryButton.TabIndex = 1
+        Me.SummaryButton.Text = "Su&mmary"
+        Me.ToolTip1.SetToolTip(Me.SummaryButton, "The amount of right answers to total answers")
         Me.SummaryButton.UseVisualStyleBackColor = True
         '
         'MathContestForm
